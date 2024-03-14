@@ -70,7 +70,7 @@ return [
                     'scheme' => env('REVERB_SCHEME', 'https'),
                     'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
                 ],
-                'allowed_origins' => [env('CORE_PUBLIC_HOST')],
+                'allowed_origins' => ['*'],
                 'ping_interval' => env('REVERB_APP_PING_INTERVAL', 60),
                 'max_message_size' => env('REVERB_APP_MAX_MESSAGE_SIZE', 10000),
             ],
