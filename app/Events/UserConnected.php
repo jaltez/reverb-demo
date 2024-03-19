@@ -23,4 +23,9 @@ class UserConnected implements ShouldBroadcast
             new Channel('everyone'),
         ];
     }
+
+    public function broadcastAs(): string
+    {
+        return 'user.connected';
+    }
 }

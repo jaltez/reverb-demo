@@ -23,4 +23,9 @@ class UserDisconnected implements ShouldBroadcast
             new Channel('everyone'),
         ];
     }
+
+    public function broadcastAs(): string
+    {
+        return 'user.disconnected';
+    }
 }
