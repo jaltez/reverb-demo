@@ -1,6 +1,8 @@
 <div class="m-8">
     <h1 class="text-2xl font-bold text-slate-700 mb-4">REVERB DEMO</h1>
 
+    <h2 class="text-xl font-bold text-slate-700 mb-4">Current User: {{ $username }}</h2>
+
     <button class="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded" wire:click="buttonClick">
         Click
     </button>

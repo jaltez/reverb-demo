@@ -9,18 +9,21 @@ use Livewire\Component;
 
 class HomeComponent extends Component
 {
+    public string $username;
+
     public array $actions = [];
 
     public array $events = [];
 
     public function mount()
     {
-        UserConnected::dispatch();
+        $this->username = bin2hex(random_bytes(5));
+        UserConnected::dispatch($this->username);
     }
 
     public function buttonClick()
     {
-        UserClicked::dispatch();
+        UserClicked::dispatch($this->username);
         $this->actions[] = 'click';
     }
 
@@ -30,14 +33,14 @@ class HomeComponent extends Component
     }
 
     #[On('echo:everyone,.user.connected')]
-    public function userConnectedEvent()
+    public function userConnectedEvent($event)
     {
-        $this->events[] = 'UserConnected';
+        $this->events[] = $event['username'].' connected.';
     }
 
     #[On('echo:everyone,.user.clicked')]
-    public function userClickedEvent()
+    public function userClickedEvent($event)
     {
-        $this->events[] = 'UserClicked';
+        $this->events[] = $event['username'].' clicked.';
     }
 }
