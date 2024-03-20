@@ -1,12 +1,19 @@
 {
-    "name": "laravel/laravel",
+    "name": "jaltez/reverb-demo",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Reverb Demo - Laravel + Livewire + Reverb",
     "keywords": [
         "laravel",
-        "framework"
+        "livewire",
+        "reverb"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Javier Altez",
+            "homepage": "https://jaltez.io"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
