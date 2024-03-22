@@ -57,7 +57,13 @@
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
-        ]
+        ],
+        "reverb": [
+            "@php artisan reverb:start --debug"
+        ],
+        "queue": [
+            "@php artisan queue:work"
+        ],
     },
     "extra": {
         "branch-alias": {
