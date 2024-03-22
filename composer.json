@@ -59,10 +59,10 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "reverb": [
-            "@php artisan reverb:start --debug"
-        ],
-        "queue": [
-            "@php artisan queue:work"
+            "sail artisan queue:clear",
+            "sail artisan queue:listen &",
+            "sail artisan reverb:restart",
+            "sail artisan reverb:start"
         ]
     },
     "extra": {
