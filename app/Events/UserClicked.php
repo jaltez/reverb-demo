@@ -12,7 +12,7 @@ class UserClicked implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public string $username)
+    public function __construct(public string $username, public string $color, public int $x, public int $y)
     {
     }
 

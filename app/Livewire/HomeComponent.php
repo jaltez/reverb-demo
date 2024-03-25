@@ -9,7 +9,9 @@ use Livewire\Component;
 
 class HomeComponent extends Component
 {
-    public string $username;
+    public string $username = '';
+
+    public string $color = '';
 
     public array $actions = [];
 
@@ -18,12 +20,13 @@ class HomeComponent extends Component
     public function mount()
     {
         $this->username = bin2hex(random_bytes(5));
-        UserConnected::dispatch($this->username);
+        $this->color = '#'.substr(str_shuffle('ABCDEF0123456789'), 0, 6);
+        UserConnected::dispatch($this->username, $this->color);
     }
 
-    public function buttonClick()
+    public function userClick($x, $y)
     {
-        UserClicked::dispatch($this->username);
+        UserClicked::dispatch($this->username, $this->color, $x, $y);
         $this->actions[] = 'click';
     }
 
@@ -35,12 +38,13 @@ class HomeComponent extends Component
     #[On('echo:everyone,.user.connected')]
     public function userConnectedEvent($event)
     {
-        $this->events[] = $event['username'].' connected.';
+        $this->events[] = 'Connected: '.json_encode($event);
     }
 
     #[On('echo:everyone,.user.clicked')]
     public function userClickedEvent($event)
     {
-        $this->events[] = $event['username'].' clicked.';
+        $this->events[] = 'Click: '.json_encode($event);
+        $this->dispatch('renderClick', $event);
     }
 }

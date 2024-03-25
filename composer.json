@@ -60,9 +60,9 @@
         ],
         "reverb": [
             "sail artisan queue:clear",
-            "sail artisan queue:listen &",
+            "sail artisan queue:work &",
             "sail artisan reverb:restart",
-            "sail artisan reverb:start"
+            "sail artisan reverb:start -q &"
         ]
     },
     "extra": {
