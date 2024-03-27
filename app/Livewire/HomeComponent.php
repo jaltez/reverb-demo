@@ -13,21 +13,24 @@ class HomeComponent extends Component
 
     public string $color = '';
 
-    public array $actions = [];
-
     public array $events = [];
 
     public function mount()
     {
         $this->username = bin2hex(random_bytes(5));
-        $this->color = '#'.substr(str_shuffle('ABCDEF0123456789'), 0, 6);
+        $this->color = '#'.dechex(rand(0x000000, 0xFFFFFF));
         UserConnected::dispatch($this->username, $this->color);
     }
 
     public function userClick($x, $y)
     {
+        $this->dispatch('renderClick', [
+            'username' => $this->username,
+            'color' => $this->color,
+            'x' => $x,
+            'y' => $y,
+        ]);
         UserClicked::dispatch($this->username, $this->color, $x, $y);
-        $this->actions[] = 'click';
     }
 
     public function render()

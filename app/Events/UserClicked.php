@@ -14,6 +14,7 @@ class UserClicked implements ShouldBroadcast
 
     public function __construct(public string $username, public string $color, public int $x, public int $y)
     {
+        $this->dontBroadcastToCurrentUser();
     }
 
     /**
