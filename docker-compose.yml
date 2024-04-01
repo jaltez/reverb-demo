@@ -26,7 +26,7 @@ services:
         depends_on:
             - redis
     redis:
-        container_name: redis
+        container_name: reverb_demo-redis
         image: 'redis:alpine'
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'

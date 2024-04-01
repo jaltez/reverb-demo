@@ -8,13 +8,13 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserClicked implements ShouldBroadcast
+class UserVoted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public string $username, public string $color, public int $x, public int $y)
+    public function __construct(public string $username, public string $color, public int $buttonId)
     {
-        $this->dontBroadcastToCurrentUser();
+        // $this->dontBroadcastToCurrentUser();
     }
 
     /**
@@ -31,6 +31,6 @@ class UserClicked implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return 'user.clicked';
+        return 'user.voted';
     }
 }
