@@ -19,11 +19,14 @@ class HomeComponent extends Component
 
     public $buttons;
 
+    public $maxCount;
+
     public function mount()
     {
         $this->username = bin2hex(random_bytes(5));
         $this->color = '#'.dechex(rand(0x000000, 0xFFFFFF));
         $this->buttons = VoteOption::all();
+        $this->maxCount = $this->buttons->max('count');
         UserConnected::dispatch($this->username, $this->color);
     }
 
