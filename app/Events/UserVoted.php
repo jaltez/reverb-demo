@@ -12,21 +12,16 @@ class UserVoted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public string $username, public string $color, public int $buttonId)
-    {
-        // $this->dontBroadcastToCurrentUser();
+    public function __construct(
+        public string $username,
+        public string $color,
+        public int $buttonId
+    ) {
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
     public function broadcastOn(): array
     {
-        return [
-            new Channel('everyone'),
-        ];
+        return [new Channel('everyone')];
     }
 
     public function broadcastAs(): string

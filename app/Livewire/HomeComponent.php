@@ -19,7 +19,7 @@ class HomeComponent extends Component
 
     public $buttons;
 
-    public $maxCount;
+    public int $maxCount;
 
     public function mount()
     {
@@ -30,25 +30,18 @@ class HomeComponent extends Component
         UserConnected::dispatch($this->username, $this->color);
     }
 
-    public function incrementCount($buttonId)
+    public function incrementCount(VoteOption $button)
     {
-        UserVoted::dispatch($this->username, $this->color, $buttonId);
-        SaveUserClick::dispatch($buttonId);
+        $button->increment('count');
+        UserVoted::dispatch($this->username, $this->color, $button->id);
+        SaveUserClick::dispatch($button->id);
+        $this->updateMaxCount();
     }
 
-    /* public function updatedCount()
+    private function updateMaxCount()
     {
-        // Perform any additional tasks here
-        // For example, you might want to update a message to all users indicating who clicked last
-        $this->emit('statusMessage', "{$this->username} clicked a button!");
-
-        // Or you might want to perform some calculations based on the new counts
-        // For example, checking if a certain threshold has been reached
-        if (max($this->clickCounts) >= 10) {
-            // Perform an action when one of the buttons has been clicked 10 times
-            $this->emit('thresholdReached', 'A button has been clicked 10 times!');
-        }
-    } */
+        $this->maxCount = max($this->buttons->pluck('count')->all());
+    }
 
     public function render()
     {
