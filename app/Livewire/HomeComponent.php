@@ -6,6 +6,7 @@ use App\Events\UserConnected;
 use App\Events\UserVoted;
 use App\Jobs\SaveUserClick;
 use App\Models\VoteOption;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -17,7 +18,7 @@ class HomeComponent extends Component
 
     public array $events = [];
 
-    public $buttons;
+    public Collection $buttons;
 
     public int $maxCount;
 
@@ -25,22 +26,27 @@ class HomeComponent extends Component
     {
         $this->username = bin2hex(random_bytes(5));
         $this->color = '#'.dechex(rand(0x000000, 0xFFFFFF));
-        $this->buttons = VoteOption::all();
-        $this->maxCount = $this->buttons->max('count');
+        $this->refreshVotes();
+        $this->updateMaxCount();
         UserConnected::dispatch($this->username, $this->color);
     }
 
     public function incrementCount(VoteOption $button)
     {
-        $button->increment('count');
+        $button->count++;
         UserVoted::dispatch($this->username, $this->color, $button->id);
         SaveUserClick::dispatch($button->id);
         $this->updateMaxCount();
     }
 
+    public function refreshVotes()
+    {
+        $this->buttons = VoteOption::all();
+    }
+
     private function updateMaxCount()
     {
-        $this->maxCount = max($this->buttons->pluck('count')->all());
+        $this->maxCount = $this->buttons->max('count');
     }
 
     public function render()
@@ -57,6 +63,7 @@ class HomeComponent extends Component
     #[On('echo:everyone,.user.voted')]
     public function userClickedEvent($event)
     {
+        $this->updateMaxCount();
         $this->events[] = 'Vote: '.json_encode($event);
         $this->dispatch('userVoted', $event);
     }
