@@ -3,7 +3,7 @@
     <h2 class="text-xl font-bold text-white mb-4">Generated user: {{ $username }}</h2>
 
     <div class="w-3/4 lg:w-1/2">
-        <div class="bars ">
+        <div class="bars">
             @foreach ($buttons as $button)
                 <div class="my-6 flex items-center" data-id="{{ $button->id }}">
                     <button

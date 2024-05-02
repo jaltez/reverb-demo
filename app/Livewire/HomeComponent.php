@@ -64,6 +64,7 @@ class HomeComponent extends Component
     public function userClickedEvent($event)
     {
         $this->updateMaxCount();
+        $this->refreshVotes();
         $this->events[] = 'Vote: '.json_encode($event);
         $this->dispatch('userVoted', $event);
     }
