@@ -1,6 +1,6 @@
 ## Real-time demo for Laravel Reverb
 
-A demo project that uses [Laravel](differentiation), [Livewire](https://livewire.laravel.com/) and [Reverb](https://reverb.laravel.com/).
+A demo project that uses [Laravel](https://laravel.com), [Livewire](https://livewire.laravel.com/) and [Reverb](https://reverb.laravel.com/).
 
 ## Quick local usage
 
