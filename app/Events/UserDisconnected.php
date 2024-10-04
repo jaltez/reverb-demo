@@ -12,9 +12,7 @@ class UserDisconnected implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public string $username)
-    {
-    }
+    public function __construct(public string $username) {}
 
     /**
      * Get the channels the event should broadcast on.

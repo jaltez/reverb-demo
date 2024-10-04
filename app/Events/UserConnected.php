@@ -12,9 +12,10 @@ class UserConnected implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public string $username)
-    {
-    }
+    public function __construct(
+        public string $username,
+        public string $color
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.
@@ -23,9 +24,7 @@ class UserConnected implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return [
-            new Channel('everyone'),
-        ];
+        return [new Channel('everyone')];
     }
 
     public function broadcastAs(): string

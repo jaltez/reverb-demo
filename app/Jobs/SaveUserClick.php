@@ -14,12 +14,11 @@ class SaveUserClick implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
-        protected int $buttonId
-    ) {
-    }
+        protected VoteOption $voteOption
+    ) {}
 
     public function handle(): void
     {
-        VoteOption::find($this->buttonId)->increment('count');
+        $this->voteOption->increment('count');
     }
 }

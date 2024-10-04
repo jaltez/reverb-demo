@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Events\UserConnected;
 use App\Events\UserVoted;
-use App\Jobs\SaveUserClick;
 use App\Models\VoteOption;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\On;
@@ -20,33 +19,27 @@ class HomeComponent extends Component
 
     public Collection $buttons;
 
-    public int $maxCount;
+    public int $maxCount = 0;
 
-    public function mount()
+    public function mount(): void
     {
-        $this->username = bin2hex(random_bytes(5));
-        $this->color = '#'.dechex(rand(0x000000, 0xFFFFFF));
+        $this->username = $this->generateUsername();
+        $this->color = $this->generateColor();
         $this->refreshVotes();
-        $this->updateMaxCount();
-        UserConnected::dispatch($this->username, $this->color);
+        $this->dispatchUserConnectedEvent();
     }
 
-    public function incrementCount(VoteOption $button)
+    public function incrementCount(VoteOption $button): void
     {
-        $button->count++;
-        UserVoted::dispatch($this->username, $this->color, $button->id);
-        SaveUserClick::dispatch($button->id);
-        $this->updateMaxCount();
+        $button->increment('count');
+        $this->refreshVotes();
+        $this->dispatchUserVotedEvent($button);
     }
 
-    public function refreshVotes()
+    public function refreshVotes(): void
     {
         $this->buttons = VoteOption::all();
-    }
-
-    private function updateMaxCount()
-    {
-        $this->maxCount = $this->buttons->max('count');
+        $this->maxCount = $this->buttons->max('count') ?? 0;
     }
 
     public function render()
@@ -55,17 +48,39 @@ class HomeComponent extends Component
     }
 
     #[On('echo:everyone,.user.connected')]
-    public function userConnectedEvent($event)
+    public function userConnectedEvent(array $event): void
     {
-        $this->events[] = 'Connected: '.json_encode($event);
+        $this->addEvent('Connected', $event);
     }
 
     #[On('echo:everyone,.user.voted')]
-    public function userClickedEvent($event)
+    public function userVotedEvent(array $event): void
     {
-        $this->updateMaxCount();
-        $this->refreshVotes();
-        $this->events[] = 'Vote: '.json_encode($event);
-        $this->dispatch('userVoted', $event);
+        $this->addEvent('Vote', $event);
+    }
+
+    private function generateUsername(): string
+    {
+        return bin2hex(random_bytes(5));
+    }
+
+    private function generateColor(): string
+    {
+        return '#'.str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+    }
+
+    private function dispatchUserConnectedEvent(): void
+    {
+        UserConnected::dispatch($this->username, $this->color);
+    }
+
+    private function dispatchUserVotedEvent(VoteOption $button): void
+    {
+        UserVoted::dispatch($this->username, $this->color, $button->id, $button->count);
+    }
+
+    private function addEvent(string $type, array $data): void
+    {
+        $this->events[] = $type.': '.json_encode($data);
     }
 }

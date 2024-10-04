@@ -13,11 +13,11 @@ class UserVoted implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
-        public string $username,
-        public string $color,
-        public int $buttonId
-    ) {
-    }
+        private string $username,
+        private string $color,
+        private int $buttonId,
+        private int $newCount
+    ) {}
 
     public function broadcastOn(): array
     {
@@ -27,5 +27,15 @@ class UserVoted implements ShouldBroadcast
     public function broadcastAs(): string
     {
         return 'user.voted';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'username' => $this->username,
+            'color' => $this->color,
+            'buttonId' => $this->buttonId,
+            'newCount' => $this->newCount,
+        ];
     }
 }
