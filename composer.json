@@ -16,21 +16,21 @@
     ],
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^11.30",
         "laravel/reverb": "@beta",
-        "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.4"
+        "laravel/tinker": "^2.10",
+        "livewire/livewire": "^3.5.12"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
-        "larastan/larastan": "^2.9",
-        "laravel/pint": "^1.18",
-        "laravel/sail": "^1.29",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.0",
-        "phpunit/phpunit": "^10.5",
-        "rector/rector": "^1.2",
-        "spatie/laravel-ignition": "^2.4"
+        "fakerphp/faker": "^1.24",
+        "larastan/larastan": "^2.9.10",
+        "laravel/pint": "^1.18.1",
+        "laravel/sail": "^1.37.1",
+        "mockery/mockery": "^1.6.12",
+        "nunomaduro/collision": "^8.5",
+        "phpunit/phpunit": "^10.5.38",
+        "rector/rector": "^1.2.10",
+        "spatie/laravel-ignition": "^2.8"
     },
     "autoload": {
         "psr-4": {
@@ -60,11 +60,10 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
-        "reverb": [
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
             "sail artisan queue:clear",
-            "sail artisan queue:work &",
-            "sail artisan reverb:restart",
-            "sail artisan reverb:start -q &"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#91561a,#fdba74\" \"sail up -d\" \"sail artisan queue:listen --tries=1\" \"sail artisan pail\" \"sail artisan reverb:start\" \"npm run dev\" --names=server,queue,logs,reverb,vite  --prefix=[{name}] "
         ],
         "refactor": "rector process",
         "lint": "pint",
