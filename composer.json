@@ -15,15 +15,17 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "laravel/framework": "^11.47",
+        "laravel/pail": "^1.2",
         "laravel/reverb": "^1.6.3",
         "laravel/tinker": "^2.10.2",
-        "livewire/livewire": "^3.7.1"
+        "livewire/livewire": "^3.7.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24.1",
         "larastan/larastan": "^2.11.2",
+        "laravel/boost": "^1.8.7",
         "laravel/pint": "^1.26.0",
         "laravel/sail": "^1.51.0",
         "mockery/mockery": "^1.6.12",
@@ -62,8 +64,8 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "sail artisan queue:clear",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#91561a,#fdba74\" \"sail up -d\" \"sail artisan queue:listen --tries=1\" \"sail artisan pail\" \"sail artisan reverb:start\" \"npm run dev\" --names=server,queue,logs,reverb,vite  --prefix=[{name}] "
+            "@php vendor/bin/sail artisan queue:clear",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#91561a,#fdba74\" \"bash vendor/bin/sail up -d\" \"bash vendor/bin/sail artisan queue:listen --tries=1\" \"bash vendor/bin/sail artisan reverb:start\" \"bash vendor/bin/sail npm run dev\" --names=server,queue,reverb,vite --prefix=\"[{name}]\""
         ],
         "rector": "rector process",
         "pint": "pint",

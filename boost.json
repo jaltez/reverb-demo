@@ -1,0 +1,15 @@
+{
+    "agents": [
+        "claude_code",
+        "gemini",
+        "opencode"
+    ],
+    "editors": [
+        "claude_code",
+        "gemini",
+        "opencode",
+        "vscode"
+    ],
+    "guidelines": [],
+    "sail": true
+}
