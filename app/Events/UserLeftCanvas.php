@@ -10,12 +10,13 @@ use Illuminate\Queue\SerializesModels;
 
 class UserLeftCanvas implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public function __construct(
         public string $username
-    ) {
-    }
+    ) {}
 
     public function broadcastOn(): PresenceChannel
     {

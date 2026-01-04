@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vote_options', function (Blueprint $table) {
+        Schema::create('vote_options', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->integer('count')->default(0);

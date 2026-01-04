@@ -26,7 +26,7 @@ class CanvasCell extends Model
 
     public function toggle(): void
     {
-        $this->is_checked = !$this->is_checked;
+        $this->is_checked = ! $this->is_checked;
         $this->click_count++;
         $this->save();
     }

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('canvas_cells', function (Blueprint $table) {
+        Schema::create('canvas_cells', function (Blueprint $table): void {
             $table->id();
             $table->unsignedInteger('row')->index();
             $table->unsignedInteger('column')->index();

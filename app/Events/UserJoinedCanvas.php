@@ -10,13 +10,14 @@ use Illuminate\Queue\SerializesModels;
 
 class UserJoinedCanvas implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public function __construct(
         public string $username,
         public string $color
-    ) {
-    }
+    ) {}
 
     public function broadcastOn(): PresenceChannel
     {

@@ -8,14 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('canvas_cells', function (Blueprint $table) {
+        Schema::table('canvas_cells', function (Blueprint $table): void {
             $table->string('color')->nullable()->after('click_count');
         });
     }
 
     public function down(): void
     {
-        Schema::table('canvas_cells', function (Blueprint $table) {
+        Schema::table('canvas_cells', function (Blueprint $table): void {
             $table->dropColumn('color');
         });
     }

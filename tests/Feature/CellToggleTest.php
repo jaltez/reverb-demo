@@ -31,9 +31,7 @@ class CellToggleTest extends TestCase
         Livewire::test(\App\Livewire\CanvasComponent::class)
             ->call('toggleCell', 3, 7);
 
-        Event::assertDispatched(CellToggled::class, function ($event) {
-            return $event->row === 3 && $event->column === 7;
-        });
+        Event::assertDispatched(CellToggled::class, fn ($event): bool => $event->row === 3 && $event->column === 7);
     }
 
     public function test_multiple_toggles_increment_click_count(): void
@@ -64,5 +62,66 @@ class CellToggleTest extends TestCase
             ])
             ->assertSet('cells.10_15.isChecked', true)
             ->assertSet('cells.10_15.clickCount', 1);
+    }
+
+    public function test_listening_to_presence_here_event(): void
+    {
+        $users = [
+            ['username' => 'SwiftArtist1a2b', 'color' => '#EF4444'],
+            ['username' => 'CalmPainter3c4d', 'color' => '#3B82F6'],
+        ];
+
+        Livewire::test(\App\Livewire\CanvasComponent::class)
+            ->call('onPresenceHere', $users)
+            ->assertSet('onlineUsers', $users);
+    }
+
+    public function test_listening_to_presence_joining_event(): void
+    {
+        $newUser = ['username' => 'BoldCreator5e6f', 'color' => '#22C55E'];
+
+        Livewire::test(\App\Livewire\CanvasComponent::class)
+            ->set('onlineUsers', [['username' => 'ExistingUser', 'color' => '#888888']])
+            ->call('onPresenceJoining', $newUser)
+            ->assertSet('onlineUsers.1', $newUser);
+    }
+
+    public function test_listening_to_presence_leaving_event(): void
+    {
+        $leavingUser = ['username' => 'LeavingUser', 'color' => '#F43F5E'];
+
+        Livewire::test(\App\Livewire\CanvasComponent::class)
+            ->set('onlineUsers', [
+                ['username' => 'StayingUser', 'color' => '#888888'],
+                $leavingUser,
+            ])
+            ->call('onPresenceLeaving', $leavingUser)
+            ->assertSet('onlineUsers', [['username' => 'StayingUser', 'color' => '#888888']]);
+    }
+
+    public function test_incremental_stats_update_on_toggle(): void
+    {
+        Livewire::test(\App\Livewire\CanvasComponent::class)
+            ->call('toggleCell', 5, 5)
+            ->assertSet('totalChecked', 1)
+            ->assertSet('totalClicks', 1)
+            ->call('toggleCell', 5, 5)
+            ->assertSet('totalChecked', 0)
+            ->assertSet('totalClicks', 2);
+    }
+
+    public function test_incremental_stats_update_on_remote_toggle(): void
+    {
+        Livewire::test(\App\Livewire\CanvasComponent::class)
+            ->call('onCellToggled', [
+                'cellId' => 1,
+                'row' => 8,
+                'column' => 8,
+                'isChecked' => true,
+                'clickCount' => 5,
+                'color' => '#FF0000',
+            ])
+            ->assertSet('totalChecked', 1)
+            ->assertSet('totalClicks', 5);
     }
 }

@@ -42,7 +42,7 @@ class CanvasCellTest extends TestCase
         $checkedCells = CanvasCell::checked()->get();
 
         $this->assertCount(2, $checkedCells);
-        $checkedCells->each(function ($cell) {
+        $checkedCells->each(function ($cell): void {
             $this->assertTrue($cell->is_checked);
         });
     }
@@ -56,7 +56,7 @@ class CanvasCellTest extends TestCase
         $uncheckedCells = CanvasCell::unchecked()->get();
 
         $this->assertCount(1, $uncheckedCells);
-        $uncheckedCells->each(function ($cell) {
+        $uncheckedCells->each(function ($cell): void {
             $this->assertFalse($cell->is_checked);
         });
     }

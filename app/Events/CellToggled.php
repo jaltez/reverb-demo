@@ -11,7 +11,9 @@ use Illuminate\Queue\SerializesModels;
 
 class CellToggled implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public function __construct(
         public int $cellId,
@@ -21,8 +23,7 @@ class CellToggled implements ShouldBroadcast
         public int $clickCount,
         public string $username,
         public string $color
-    ) {
-    }
+    ) {}
 
     public function broadcastOn(): array
     {

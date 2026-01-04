@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Events\CellToggled;
 use App\Models\CanvasCell;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -57,6 +58,7 @@ class CanvasComponent extends Component
         $cells = CanvasCell::all()->keyBy(fn ($cell) => "{$cell->row}_{$cell->column}");
 
         $this->cells = [];
+
         $this->totalChecked = 0;
         $this->totalClicks = 0;
 
@@ -76,6 +78,7 @@ class CanvasComponent extends Component
                     if ($cell->is_checked) {
                         $this->totalChecked++;
                     }
+
                     $this->totalClicks += $cell->click_count;
                 } else {
                     $this->cells[$key] = [
@@ -95,10 +98,31 @@ class CanvasComponent extends Component
     {
         $key = "{$row}_{$column}";
 
+        // Rate limit: 60 toggles per minute per user
+        $executed = RateLimiter::attempt(
+            'canvas-toggle:'.$this->userId,
+            60,
+            function (): void {
+                // Allow the action
+            },
+            60
+        );
+
+        if (! $executed) {
+            $seconds = RateLimiter::availableIn('canvas-toggle:'.$this->userId);
+
+            session()->flash('error', "Too many toggles! Please wait {$seconds} seconds.");
+
+            return;
+        }
+
         $cell = CanvasCell::firstOrCreate(
             ['row' => $row, 'column' => $column],
             ['is_checked' => false, 'click_count' => 0, 'color' => null]
         );
+
+        $previousCheckedState = $cell->is_checked;
+        $previousClickCount = $cell->click_count;
 
         $cell->toggle();
         $cell->color = $this->color;
@@ -113,8 +137,9 @@ class CanvasComponent extends Component
             'color' => $cell->color,
         ];
 
-        $this->totalChecked = collect($this->cells)->where('isChecked', true)->count();
-        $this->totalClicks = collect($this->cells)->sum('clickCount');
+        // Update stats incrementally
+        $this->totalChecked += $cell->is_checked <=> $previousCheckedState;
+        $this->totalClicks += $cell->click_count - $previousClickCount;
 
         CellToggled::dispatch(
             $cell->id,
@@ -134,6 +159,9 @@ class CanvasComponent extends Component
         $column = $event['column'];
         $key = "{$row}_{$column}";
 
+        $previousCheckedState = $this->cells[$key]['isChecked'] ?? false;
+        $previousClickCount = $this->cells[$key]['clickCount'] ?? 0;
+
         $this->cells[$key] = [
             'id' => $event['cellId'],
             'row' => $row,
@@ -143,8 +171,9 @@ class CanvasComponent extends Component
             'color' => $event['color'],
         ];
 
-        $this->totalChecked = collect($this->cells)->where('isChecked', true)->count();
-        $this->totalClicks = collect($this->cells)->sum('clickCount');
+        // Update stats incrementally
+        $this->totalChecked += $event['isChecked'] <=> $previousCheckedState;
+        $this->totalClicks += $event['clickCount'] - $previousClickCount;
     }
 
     #[On('echo-presence:canvas.presence,here')]
@@ -153,11 +182,13 @@ class CanvasComponent extends Component
         $this->onlineUsers = $users;
     }
 
+    #[On('echo-presence:canvas.presence,joining')]
     public function onPresenceJoining(array $user): void
     {
         $this->onlineUsers[] = $user;
     }
 
+    #[On('echo-presence:canvas.presence,leaving')]
     public function onPresenceLeaving(array $user): void
     {
         $this->onlineUsers = collect($this->onlineUsers)
