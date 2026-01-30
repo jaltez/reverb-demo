@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vote_options', function (Blueprint $table): void {
+        Schema::create('canvas_cells', function (Blueprint $table): void {
             $table->id();
-            $table->string('name');
-            $table->integer('count')->default(0);
+            $table->unsignedInteger('row')->index();
+            $table->unsignedInteger('column')->index();
+            $table->boolean('is_checked')->default(false)->index();
+            $table->unsignedInteger('click_count')->default(0);
             $table->timestamps();
+
+            $table->unique(['row', 'column']);
         });
     }
 
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vote_options');
+        Schema::dropIfExists('canvas_cells');
     }
 };

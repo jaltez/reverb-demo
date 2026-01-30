@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\HomeComponent;
+use App\Livewire\CanvasComponent;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', HomeComponent::class);
+Route::get('/', CanvasComponent::class);
