@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": "^8.4",
-        "laravel/framework": "^11.54",
+        "laravel/framework": "^12.60",
         "laravel/pail": "^1.2.7",
         "laravel/reverb": "^1.10.2",
         "laravel/tinker": "^2.11.1",
@@ -24,14 +24,14 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.24.1",
-        "larastan/larastan": "^2.11.2",
+        "larastan/larastan": "^3.0",
         "laravel/boost": "^1.8.13",
         "laravel/pint": "^1.29.1",
         "laravel/sail": "^1.61.0",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.9.4",
         "phpunit/phpunit": "^11.5.55",
-        "rector/rector": "^1.2.10",
+        "rector/rector": "^2.0",
         "spatie/laravel-ignition": "^2.12.0"
     },
     "autoload": {
